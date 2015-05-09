@@ -1,4 +1,7 @@
-## Date;Time;Global_active_power;Global_reactive_power;Voltage;Global_intensity;Sub_metering_1;Sub_metering_2;Sub_metering_3
+## Include libraries
+library(lubridate)
+
+## Columns in dataset: Date;Time;Global_active_power;Global_reactive_power;Voltage;Global_intensity;Sub_metering_1;Sub_metering_2;Sub_metering_3
 data1 <- read.csv("household_power_consumption.txt", sep = ";")
 
 ## fix classes
@@ -10,9 +13,12 @@ data1$Sub_metering_1 <- as.numeric(as.character(data1$Sub_metering_1))
 data1$Sub_metering_2 <- as.numeric(as.character(data1$Sub_metering_2))
 data1$Sub_metering_3 <- as.numeric(as.character(data1$Sub_metering_3))
 
-library(dplyr)
-library(lubridate)
-
+## New dateTime columns
 dateTime <- dmy(data1$Date) + hms(data1$Time)
 data1 <- cbind(data1, dateTime)
-data1 <- data1[,3:10]
+
+## Filter dataset
+data2 <- data1[data1$dateTime >= ymd('2007-02-01') & data1$dateTime < ymd('2007-02-03'),]
+
+## Graphics
+hist(data2$Global_active_power, col = "red", main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
